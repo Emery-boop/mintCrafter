@@ -1,0 +1,956 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme Land - The Ultimate Memecoin Experience</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Comic+Neue:wght@700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Comic Neue', sans-serif;
+        }
+
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --accent: #ffd166;
+            --dark: #1a1a2e;
+            --light: #f7f9fc;
+            --meme-red: #ff3860;
+            --meme-blue: #3498db;
+            --meme-green: #2ecc71;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: var(--light);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><text x="10" y="20" font-size="12" fill="rgba(255,255,255,0.05)">😂</text><text x="70" y="50" font-size="16" fill="rgba(255,255,255,0.05)">🚀</text><text x="30" y="80" font-size="14" fill="rgba(255,255,255,0.05)">💎</text></svg>');
+            z-index: -1;
+        }
+
+        header {
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 3px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 101;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 101;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--light);
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        nav a i {
+            font-size: 0.9rem;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        nav a::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            animation: glow 2s infinite alternate;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .coin-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .coin {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 30% 30%, var(--accent), #e6b800);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: 0 0 30px rgba(255, 209, 102, 0.7);
+            animation: float 3s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coin::before {
+            content: "MLC";
+            position: absolute;
+            color: rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+            font-size: 1.2rem;
+            transform: rotate(-45deg);
+        }
+
+        .price-ticker {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.4rem;
+            font-weight: bold;
+            border: 2px solid var(--accent);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .price-ticker .change {
+            color: var(--meme-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.9rem 1.8rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            margin: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        section {
+            padding: 3rem 1.5rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-size: 2rem;
+            color: var(--accent);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--accent);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--accent);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--secondary);
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+        }
+
+        .meme-generator {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .meme-preview {
+            width: 100%;
+            max-width: 500px;
+            height: 320px;
+            background: #2c2c54;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .meme-text {
+            padding: 0.8rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+            z-index: 2;
+            word-break: break-word;
+        }
+
+        .top-text {
+            align-self: flex-start;
+        }
+
+        .bottom-text {
+            align-self: flex-end;
+        }
+
+        .meme-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            justify-content: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .meme-controls input, .meme-controls select {
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: 2px solid var(--accent);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .meme-controls .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .control-group .btn {
+            flex: 1;
+        }
+
+        .community {
+            background: linear-gradient(to bottom, #1a1a2e, #0d0d1a);
+            border-top: 3px solid var(--meme-red);
+            border-bottom: 3px solid var(--meme-red);
+        }
+
+        .members {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .member {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1.2rem;
+            text-align: center;
+            width: 160px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .member:hover {
+            transform: scale(1.05);
+            border-color: var(--meme-blue);
+        }
+
+        .member-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--accent);
+            margin: 0 auto 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--dark);
+        }
+
+        .member h3 {
+            font-size: 1.2rem;
+        }
+
+        .member p {
+            font-size: 0.85rem;
+            margin: 0.2rem 0;
+        }
+
+        .tokenomics {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .token-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            width: 100%;
+            max-width: 250px;
+            border-top: 5px solid var(--meme-green);
+        }
+
+        .token-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+            color: var(--meme-green);
+        }
+
+        .token-card p {
+            font-size: 1.1rem;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            border-top: 3px solid var(--secondary);
+        }
+
+        .footer-logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo h2 {
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .footer-logo i {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-5px) rotate(10deg);
+            background: var(--secondary);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
+            100% { text-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 50px rgba(78, 205, 196, 0.5); }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .meme-animation {
+            position: absolute;
+            font-size: 2.5rem;
+            z-index: 1;
+            opacity: 0.3;
+            animation: float 15s infinite linear;
+        }
+
+        .meme1 { top: 10%; left: 5%; animation-delay: 0s; }
+        .meme2 { top: 20%; right: 10%; animation-delay: 2s; animation-duration: 12s; }
+        .meme3 { bottom: 30%; left: 15%; animation-delay: 4s; animation-duration: 18s; }
+        .meme4 { bottom: 15%; right: 20%; animation-delay: 6s; animation-duration: 14s; }
+        .meme5 { top: 40%; left: 25%; animation-delay: 8s; animation-duration: 16s; }
+
+        /* Mobile Navigation */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            nav {
+                width: 100%;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.5s ease-out;
+            }
+            
+            nav.active {
+                max-height: 500px;
+                padding-top: 1rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            nav a {
+                display: block;
+                text-align: center;
+                padding: 0.8rem;
+                font-size: 1.1rem;
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .price-ticker {
+                font-size: 1.2rem;
+                padding: 0.7rem 1.2rem;
+            }
+            
+            .btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.95rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .members {
+                gap: 1rem;
+            }
+            
+            .member {
+                width: calc(50% - 0.75rem);
+                max-width: 180px;
+            }
+            
+            .meme-preview {
+                height: 280px;
+            }
+            
+            .meme-text {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            
+            .coin {
+                width: 85px;
+                height: 85px;
+                font-size: 2rem;
+            }
+            
+            .feature-card {
+                padding: 1.2rem;
+            }
+            
+            .feature-icon {
+                font-size: 2rem;
+            }
+            
+            .feature-card h3 {
+                font-size: 1.3rem;
+            }
+            
+            .member {
+                width: 100%;
+                max-width: 220px;
+            }
+            
+            .meme-preview {
+                height: 240px;
+            }
+            
+            .meme-text {
+                font-size: 1.1rem;
+            }
+            
+            .control-group {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Memes -->
+    <div class="meme-animation meme1">🚀</div>
+    <div class="meme-animation meme2">💎</div>
+    <div class="meme-animation meme3">😂</div>
+    <div class="meme-animation meme4">🤑</div>
+    <div class="meme-animation meme5">🌕</div>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-coins"></i>
+            <h1>Meme Land</h1>
+        </div>
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <nav id="mainNav">
+            <ul>
+                <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#features"><i class="fas fa-star"></i> Features</a></li>
+                <li><a href="#meme-generator"><i class="fas fa-magic"></i> Meme Generator</a></li>
+                <li><a href="#community"><i class="fas fa-users"></i> Community</a></li>
+                <li><a href="#tokenomics"><i class="fas fa-chart-pie"></i> Tokenomics</a></li>
+                <li><a href="#" class="btn btn-outline"><i class="fas fa-wallet"></i> Connect</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Welcome to Meme Land!</h2>
+            <p>Where memes meet blockchain and dreams become reality</p>
+            
+            <div class="coin-display">
+                <div class="coin">
+                    <span>😂</span>
+                </div>
+                <div class="price-ticker">
+                    <span>MLC: $0.069</span>
+                    <span class="change">+420.69%</span>
+                </div>
+            </div>
+            
+            <div class="hero-buttons">
+                <a href="#" class="btn"><i class="fas fa-rocket"></i> Buy $MLC</a>
+                <a href="#meme-generator" class="btn btn-outline"><i class="fas fa-magic"></i> Create Meme</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="features">
+        <h2 class="section-title">Unique Features</h2>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <h3>Meme Staking</h3>
+                <p>Stake your $MLC tokens to earn rewards based on meme popularity and virality.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-vote-yea"></i>
+                </div>
+                <h3>Meme Governance</h3>
+                <p>Vote on which memes get promoted and earn rewards for participating.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <h3>Auto-Meme</h3>
+                <p>Our algorithm generates memes based on trending topics and community votes.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h3>Meme Contests</h3>
+                <p>Weekly contests with prizes for the funniest and most viral memes.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="meme-generator">
+        <h2 class="section-title">Meme Generator</h2>
+        <div class="meme-generator">
+            <div class="meme-preview">
+                <div class="meme-text top-text">WHEN YOU BUY $MLC AT THE DIP</div>
+                <div class="meme-text bottom-text">AND IT GOES TO THE MOON 🚀</div>
+            </div>
+            
+            <div class="meme-controls">
+                <input type="text" placeholder="Top text..." value="WHEN YOU BUY $MLC AT THE DIP">
+                <input type="text" placeholder="Bottom text..." value="AND IT GOES TO THE MOON 🚀">
+                <select>
+                    <option>Doge Template</option>
+                    <option>Pepe Template</option>
+                    <option>Wojak Template</option>
+                    <option>Drake Template</option>
+                    <option>Stonks Template</option>
+                </select>
+                
+                <div class="control-group">
+                    <button class="btn"><i class="fas fa-download"></i> Download Meme</button>
+                    <button class="btn btn-outline"><i class="fas fa-share-alt"></i> Share & Earn</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="community" class="community">
+        <h2 class="section-title">Meme Land Community</h2>
+        <p style="text-align: center; margin-bottom: 1.5rem; font-size: 1.1rem;">Join our 69,420+ strong meme army!</p>
+        
+        <div class="members">
+            <div class="member">
+                <div class="member-img"><i class="fas fa-crown"></i></div>
+                <h3>Meme King</h3>
+                <p>Top Creator</p>
+                <p>42,069 MLC</p>
+            </div>
+            
+            <div class="member">
+                <div class="member-img"><i class="fas fa-hat-wizard"></i></div>
+                <h3>Dank Wizard</h3>
+                <p>Meme Alchemist</p>
+                <p>33,456 MLC</p>
+            </div>
+            
+            <div class="member">
+                <div class="member-img"><i class="fas fa-dragon"></i></div>
+                <h3>Pepe Lord</h3>
+                <p>Rare Collector</p>
+                <p>28,901 MLC</p>
+            </div>
+            
+            <div class="member">
+                <div class="member-img"><i class="fas fa-robot"></i></div>
+                <h3>AI Memelord</h3>
+                <p>Algorithm Master</p>
+                <p>25,340 MLC</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="tokenomics">
+        <h2 class="section-title">Tokenomics</h2>
+        
+        <div class="tokenomics">
+            <div class="token-card">
+                <h3>1 BILLION</h3>
+                <p>Total Supply</p>
+            </div>
+            
+            <div class="token-card">
+                <h3>4%</h3>
+                <p>Auto-Liquidity</p>
+            </div>
+            
+            <div class="token-card">
+                <h3>3%</h3>
+                <p>Meme Rewards</p>
+            </div>
+            
+            <div class="token-card">
+                <h3>3%</h3>
+                <p>Marketing & Development</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">
+            <i class="fas fa-coins"></i>
+            <h2>Meme Land</h2>
+        </div>
+        <p>The future of memecoins is here. Join the revolution today!</p>
+        
+        <div class="social-links">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-telegram"></i></a>
+            <a href="#"><i class="fab fa-discord"></i></a>
+            <a href="#"><i class="fab fa-reddit"></i></a>
+            <a href="#"><i class="fab fa-medium"></i></a>
+        </div>
+        
+        <p style="margin-top: 1.5rem; opacity: 0.7; font-size: 0.9rem;">Disclaimer: This is a parody project. Meme Land Coin ($MLC) is not a real cryptocurrency. Invest responsibly.</p>
+        <p style="opacity: 0.7; font-size: 0.9rem;">&copy; 2023 Meme Land. All memes reserved.</p>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const mainNav = document.getElementById('mainNav');
+        
+        menuToggle.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            menuToggle.innerHTML = mainNav.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Close menu when clicking a link
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('active');
+                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+        
+        // Simulate price changes
+        function updatePrice() {
+            const priceElement = document.querySelector('.price-ticker span:first-child');
+            const changeElement = document.querySelector('.change');
+            
+            // Generate random price movement
+            const currentPrice = parseFloat(priceElement.textContent.split('$')[1]);
+            const changePercent = (Math.random() - 0.3) * 10;
+            const newPrice = currentPrice * (1 + changePercent/100);
+            
+            // Update display
+            priceElement.textContent = `MLC: $${newPrice.toFixed(4)}`;
+            changeElement.textContent = `${changePercent > 0 ? '+' : ''}${changePercent.toFixed(2)}%`;
+            
+            // Change color based on movement
+            changeElement.style.color = changePercent >= 0 ? '#2ecc71' : '#e74c3c';
+            
+            // Schedule next update
+            setTimeout(updatePrice, 3000);
+        }
+        
+        // Initialize meme generator controls
+        function setupMemeGenerator() {
+            const topInput = document.querySelector('.meme-controls input:first-child');
+            const bottomInput = document.querySelector('.meme-controls input:nth-child(2)');
+            const topText = document.querySelector('.top-text');
+            const bottomText = document.querySelector('.bottom-text');
+            
+            topInput.addEventListener('input', () => {
+                topText.textContent = topInput.value;
+            });
+            
+            bottomInput.addEventListener('input', () => {
+                bottomText.textContent = bottomInput.value;
+            });
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updatePrice();
+            setupMemeGenerator();
+            
+            // Add animation to buttons on hover
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('mouseenter', () => {
+                    btn.style.transform = 'translateY(-5px)';
+                });
+                
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    if (this.getAttribute('href') === '#') return;
+                    
+                    e.preventDefault();
+                    
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

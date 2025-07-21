@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFT Collection Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: rgba(15, 14, 41, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #2a274a;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #6c5ce7;
+        }
+
+        .logo i {
+            color: #a29bfe;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #dfe6e9;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #a29bfe;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: rgba(38, 33, 97, 0.5);
+            border-radius: 30px;
+            padding: 8px 15px;
+            width: 300px;
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 8px;
+            width: 100%;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .search-bar i {
+            color: #a29bfe;
+            cursor: pointer;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #a29bfe, #6c5ce7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #b2bec3;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(108, 92, 231, 0.2);
+            color: #a29bfe;
+            border: 1px solid #6c5ce7;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #6c5ce7;
+            color: white;
+        }
+
+        .collections-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .collections-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 0 15px;
+        }
+
+        .collections-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #a29bfe;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(108, 92, 231, 0.3);
+            border: 1px solid #6c5ce7;
+            color: #a29bfe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #6c5ce7;
+            color: white;
+        }
+
+        .collections-scroll {
+            display: flex;
+            gap: 30px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 10px 5px 30px;
+            scrollbar-width: thin;
+            scrollbar-color: #6c5ce7 #24243e;
+        }
+
+        .collections-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .collections-scroll::-webkit-scrollbar-track {
+            background: #24243e;
+            border-radius: 10px;
+        }
+
+        .collections-scroll::-webkit-scrollbar-thumb {
+            background: #6c5ce7;
+            border-radius: 10px;
+        }
+
+        .collection-card {
+            background: rgba(38, 33, 97, 0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #3a3469;
+            flex: 0 0 300px;
+        }
+
+        .collection-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(38, 33, 97, 0.5);
+            border-color: #6c5ce7;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 250px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .collection-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(108, 92, 231, 0.9);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .collection-name {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #f7f7f7;
+        }
+
+        .creator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #b2bec3;
+        }
+
+        .creator img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid #3a3469;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #a29bfe;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #b2bec3;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px 20px;
+            color: #b2bec3;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .collections-scroll {
+                gap: 20px;
+            }
+            
+            .collection-card {
+                flex: 0 0 280px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .collection-card {
+                flex: 0 0 260px;
+            }
+            
+            .collections-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .nav-buttons {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-cubes"></i>
+            <span>NFTverse</span>
+        </div>
+        
+        <nav class="nav-links">
+            <a href="#" class="active">Explore</a>
+            <a href="#">Stats</a>
+            <a href="#">Resources</a>
+            <a href="#">Create</a>
+            <a href="#">Wallet</a>
+        </nav>
+        
+        <div class="search-bar">
+            <input type="text" placeholder="Search collections...">
+            <i class="fas fa-search"></i>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <h1>Discover Unique NFT Collections</h1>
+        <p>Explore the most exclusive and trending NFT collections from artists around the world. Find your next digital masterpiece.</p>
+        
+        <div class="filters">
+            <button class="filter-btn active">All</button>
+            <button class="filter-btn">Art</button>
+            <button class="filter-btn">Photography</button>
+            <button class="filter-btn">Collectibles</button>
+            <button class="filter-btn">Virtual Worlds</button>
+            <button class="filter-btn">Trading Cards</button>
+        </div>
+    </section>
+    
+    <section class="collections-container">
+        <div class="collections-header">
+            <h2>Trending Collections</h2>
+            <div class="nav-buttons">
+                <button class="nav-btn" id="prev-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="nav-btn" id="next-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="collections-scroll" id="collections-scroll">
+            <!-- Collection 1 -->
+            <div class="collection-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1639762681057-408e52192e55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="CryptoPunks">
+                    <div class="card-badge">Verified</div>
+                </div>
+                <div class="card-content">
+                    <h3 class="collection-name">CryptoPunks</h3>
+                    <div class="creator">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Creator">
+                        <span>Larva Labs</span>
+                    </div>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value">9.8K</div>
+                            <div class="stat-label">Items</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">4.2K</div>
+                            <div class="stat-label">Owners</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">68.9Ξ</div>
+                            <div class="stat-label">Floor</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Collection 2 -->
+            <div class="collection-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1642784353725-5bfa4b22d0ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Bored Ape Yacht Club">
+                    <div class="card-badge">Verified</div>
+                </div>
+                <div class="card-content">
+                    <h3 class="collection-name">Bored Ape Yacht Club</h3>
+                    <div class="creator">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Creator">
+                        <span>Yuga Labs</span>
+                    </div>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value">10K</div>
+                            <div class="stat-label">Items</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">6.4K</div>
+                            <div class="stat-label">Owners</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">42.3Ξ</div>
+                            <div class="stat-label">Floor</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Collection 3 -->
+            <div class="collection-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Art Blocks">
+                    <div class="card-badge">Verified</div>
+                </div>
+                <div class="card-content">
+                    <h3 class="collection-name">Art Blocks</h3>
+                    <div class="creator">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Creator">
+                        <span>Erick Calderon</span>
+                    </div>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value">380K</div>
+                            <div class="stat-label">Items</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">32.5K</div>
+                            <div class="stat-label">Owners</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">1.2Ξ</div>
+                            <div class="stat-label">Floor</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Collection 4 -->
+            <div class="collection-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Doodles">
+                    <div class="card-badge">Verified</div>
+                </div>
+                <div class="card-content">
+                    <h3 class="collection-name">Doodles</h3>
+                    <div class="creator">
+                        <img src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Creator">
+                        <span>Burnt Toast</span>
+                    </div>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value">10K</div>
+                            <div class="stat-label">Items</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">5.6K</div>
+                            <div class="stat-label">Owners</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">3.8Ξ</div>
+                            <div class="stat-label">Floor</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Collection 5 -->
+            <div class="collection-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1620325867502-221cfb5faa5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="CloneX">
+                    <div class="card-badge">Verified</div>
+                </div>
+                <div class="card-content">
+                    <h3 class="collection-name">CloneX</h3>
+                    <div class="creator">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Creator">
+                        <span>RTFKT Studios</span>
+                    </div>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value">20K</div>
+                            <div class="stat-label">Items</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">7.3K</div>
+                            <div class="stat-label">Owners</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">4.7Ξ</div>
+                            <div class="stat-label">Floor</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Collection 6 -->
+            <div class="collection-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1632516643720-e7f5d7d6ecc9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Cool Cats">
+                    <div class="card-badge">Verified</div>
+                </div>
+                <div class="card-content">
+                    <h3 class="collection-name">Cool Cats</h3>
+                    <div class="creator">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Creator">
+                        <span>Cool Cats Team</span>
+                    </div>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value">9.9K</div>
+                            <div class="stat-label">Items</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">5.1K</div>
+                            <div class="stat-label">Owners</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">2.4Ξ</div>
+                            <div class="stat-label">Floor</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Collection 7 -->
+            <div class="collection-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1639762681483-1c47b56f16a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Azuki">
+                    <div class="card-badge">Verified</div>
+                </div>
+                <div class="card-content">
+                    <h3 class="collection-name">Azuki</h3>
+                    <div class="creator">
+                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Creator">
+                        <span>Chiru Labs</span>
+                    </div>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value">10K</div>
+                            <div class="stat-label">Items</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">4.8K</div>
+                            <div class="stat-label">Owners</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">7.5Ξ</div>
+                            <div class="stat-label">Floor</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Collection 8 -->
+            <div class="collection-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1642784353782-8f3b1f0b6b7f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="World of Women">
+                    <div class="card-badge">Verified</div>
+                </div>
+                <div class="card-content">
+                    <h3 class="collection-name">World of Women</h3>
+                    <div class="creator">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Creator">
+                        <span>Yam Karkai</span>
+                    </div>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value">10K</div>
+                            <div class="stat-label">Items</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">4.3K</div>
+                            <div class="stat-label">Owners</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">0.85Ξ</div>
+                            <div class="stat-label">Floor</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="footer">
+        <p>© 2023 NFTverse Explorer. All digital assets displayed are property of their respective owners.</p>
+        <p>Discover, collect, and sell extraordinary NFTs</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrollContainer = document.getElementById('collections-scroll');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            // Calculate scroll distance based on card width and gap
+            const scrollAmount = () => {
+                const card = document.querySelector('.collection-card');
+                const cardWidth = card.offsetWidth;
+                const gap = parseInt(window.getComputedStyle(scrollContainer).gap);
+                return cardWidth + gap;
+            };
+            
+            prevBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({
+                    left: -scrollAmount(),
+                    behavior: 'smooth'
+                });
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({
+                    left: scrollAmount(),
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Auto-scroll every 5 seconds
+            let autoScroll = setInterval(() => {
+                scrollContainer.scrollBy({
+                    left: scrollAmount(),
+                    behavior: 'smooth'
+                });
+            }, 5000);
+            
+            // Pause auto-scroll when user interacts
+            scrollContainer.addEventListener('mouseenter', () => clearInterval(autoScroll));
+            scrollContainer.addEventListener('mouseleave', () => {
+                autoScroll = setInterval(() => {
+                    scrollContainer.scrollBy({
+                        left: scrollAmount(),
+                        behavior: 'smooth'
+                    });
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VaultChain - Crypto Wallet Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#00FFC2',
+                        secondary: '#4E44CE',
+                        dark: '#0F172A',
+                        darker: '#0A0F1F',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-dark text-gray-200 font-sans overflow-hidden">
+    <div id="app" class="flex h-screen">
+        <!-- Sidebar Navigation -->
+        <div class="bg-darker w-64 flex-shrink-0 hidden md:flex flex-col border-r border-gray-800">
+            <div class="p-6">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-r from-primary to-secondary w-10 h-10 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-wallet text-white text-xl"></i>
+                    </div>
+                    <h1 class="text-xl font-bold">Vault<span class="text-primary">Chain</span></h1>
+                </div>
+            </div>
+            
+            <nav class="flex-1 px-4 mt-6">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="#" class="flex items-center p-3 rounded-lg bg-gray-800 text-primary">
+                            <i class="fas fa-home mr-3"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition">
+                            <i class="fas fa-coins mr-3"></i>
+                            <span>Tokens</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition">
+                            <i class="fas fa-image mr-3"></i>
+                            <span>NFTs</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition">
+                            <i class="fas fa-exchange-alt mr-3"></i>
+                            <span>Transactions</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition">
+                            <i class="fas fa-cog mr-3"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="p-4 border-t border-gray-800">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="bg-gray-700 rounded-full p-2">
+                            <i class="fas fa-user text-sm"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium">0x1a2b...c3d4</p>
+                            <p class="text-xs text-gray-400">Ethereum</p>
+                        </div>
+                    </div>
+                    <button class="text-red-400 hover:text-red-300 transition">
+                        <i class="fas fa-power-off"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="bg-darker border-b border-gray-800 p-4 flex items-center justify-between">
+                <div class="flex items-center">
+                    <button class="md:hidden text-gray-400 mr-4">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h2 class="text-xl font-semibold">Dashboard</h2>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button class="text-gray-400 hover:text-gray-200">
+                            <i class="fas fa-bell text-xl"></i>
+                        </button>
+                        <span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+                    </div>
+                    
+                    <div class="hidden md:flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2">
+                        <div class="bg-gradient-to-r from-primary to-secondary w-6 h-6 rounded-full"></div>
+                        <span class="text-sm">0x1a2b...c3d4</span>
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </div>
+                    
+                    <button class="bg-gradient-to-r from-primary to-secondary w-10 h-10 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-wallet text-white"></i>
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-4 md:p-6">
+                <!-- Portfolio Summary -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-darker rounded-xl p-6 border border-gray-800 lg:col-span-2">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-400">Total Portfolio Value</p>
+                                <h2 class="text-3xl font-bold mt-2">$24,683.42</h2>
+                                <p class="text-green-500 mt-1 flex items-center">
+                                    <i class="fas fa-arrow-up mr-1"></i>
+                                    <span>+3.2%</span>
+                                </p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="bg-gray-800 hover:bg-gray-700 transition rounded-lg px-4 py-2">
+                                    Send
+                                </button>
+                                <button class="bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition rounded-lg px-4 py-2">
+                                    Receive
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <div class="flex justify-between mb-4">
+                                <h3 class="font-medium">Asset Distribution</h3>
+                                <button class="text-sm text-gray-400 hover:text-gray-200">View All</button>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center">
+                                        <i class="fab fa-ethereum"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p>Ethereum</p>
+                                        <p class="text-sm text-gray-400">ETH</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-right">3.421 ETH</p>
+                                    <p class="text-right text-gray-400">$8,327.50</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between mt-4">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-lg flex items-center justify-center">
+                                        <i class="fab fa-bitcoin"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p>Bitcoin</p>
+                                        <p class="text-sm text-gray-400">BTC</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-right">0.125 BTC</p>
+                                    <p class="text-right text-gray-400">$5,231.20</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-darker rounded-xl p-6 border border-gray-800">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-medium">Chain Selector</h3>
+                            <button class="text-sm text-gray-400 hover:text-gray-200">Manage</button>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="bg-gray-800 hover:bg-gray-700 transition rounded-lg p-3 flex flex-col items-center">
+                                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                                    <i class="fab fa-ethereum"></i>
+                                </div>
+                                <span class="mt-2">Ethereum</span>
+                                <span class="text-xs text-primary">Connected</span>
+                            </button>
+                            
+                            <button class="bg-gray-800 hover:bg-gray-700 transition rounded-lg p-3 flex flex-col items-center">
+                                <div class="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
+                                    <i class="fab fa-btc"></i>
+                                </div>
+                                <span class="mt-2">BNB Chain</span>
+                            </button>
+                            
+                            <button class="bg-gray-800 hover:bg-gray-700 transition rounded-lg p-3 flex flex-col items-center">
+                                <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-indigo-500 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-gem"></i>
+                                </div>
+                                <span class="mt-2">Polygon</span>
+                            </button>
+                            
+                            <button class="bg-gray-800 hover:bg-gray-700 transition rounded-lg p-3 flex flex-col items-center">
+                                <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <span class="mt-2">Solana</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Token List -->
+                <div class="bg-darker rounded-xl p-6 border border-gray-800 mb-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-medium">Your Tokens</h3>
+                        <div class="flex space-x-2">
+                            <button class="bg-gray-800 hover:bg-gray-700 transition rounded-lg px-3 py-1">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button class="bg-gray-800 hover:bg-gray-700 transition rounded-lg px-3 py-1">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="text-gray-400 text-left">
+                                    <th class="pb-4">Asset</th>
+                                    <th class="pb-4">Balance</th>
+                                    <th class="pb-4">Price</th>
+                                    <th class="pb-4">Value</th>
+                                    <th class="pb-4">24h Change</th>
+                                    <th class="pb-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-t border-gray-800 hover:bg-gray-800 transition">
+                                    <td class="py-4">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
+                                                <i class="fab fa-ethereum"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <p>Ethereum</p>
+                                                <p class="text-sm text-gray-400">ETH</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>3.421</td>
+                                    <td>$2,435.32</td>
+                                    <td>$8,327.50</td>
+                                    <td class="text-green-500">+2.4%</td>
+                                    <td>
+                                        <div class="flex space-x-2">
+                                            <button class="text-sm bg-gray-800 hover:bg-gray-700 transition rounded-lg px-3 py-1">
+                                                Send
+                                            </button>
+                                            <button class="text-sm bg-gray-800 hover:bg-gray-700 transition rounded-lg px-3 py-1">
+                                                Receive
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="border-t border-gray-800 hover:bg-gray-800 transition">
+                                    <td class="py-4">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center">
+                                                <i class="fab fa-btc"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <p>Bitcoin</p>
+                                                <p class="text-sm text-gray-400">BTC</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>0.125</td>
+                                    <td>$41,849.60</td>
+                                    <td>$5,231.20</td>
+                                    <td class="text-green-500">+1.8%</td>
+                                    <td>
+                                        <div class="flex space-x-2">
+                                            <button class="text-sm bg-gray-800 hover:bg-gray-700 transition rounded-lg px-3 py-1">
+                                                Send
+                                            </button>
+                                            <button class="text-sm bg-gray-800 hover:bg-gray-700 transition rounded-lg px-3 py-1">
+                                                Receive
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="border-t border-gray-800 hover:bg-gray-800 transition">
+                                    <td class="py-4">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 bg-gradient-to-r from-purple-400 to-indigo-500 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-gem"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <p>Polygon</p>
+                                                <p class="text-sm text-gray-400">MATIC</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>4,832.42</td>
+                                    <td>$0.76</td>
+                                    <td>$3,672.64</td>
+                                    <td class="text-red-500">-0.5%</td>
+                                    <td>
+                                        <div class="flex space-x-2">
+                                            <button class="text-sm bg-gray-800 hover:bg-gray-700 transition rounded-lg px-3 py-1">
+                                                Send
+                                            </button>
+                                            <button class="text-sm bg-gray-800 hover:bg-gray-700 transition rounded-lg px-3 py-1">
+                                                Receive
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- NFT Preview and Transactions -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- NFT Preview -->
+                    <div class="bg-darker rounded-xl p-6 border border-gray-800">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-medium">NFT Gallery</h3>
+                            <button class="text-sm text-gray-400 hover:text-gray-200">View All</button>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20 p-0.5">
+                                <div class="w-full h-full bg-gray-800 rounded-xl overflow-hidden">
+                                    <img src="https://via.placeholder.com/300/00FFC2/0A0F1F?text=NFT+1" class="w-full h-full object-cover" alt="NFT">
+                                </div>
+                            </div>
+                            <div class="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20 p-0.5">
+                                <div class="w-full h-full bg-gray-800 rounded-xl overflow-hidden">
+                                    <img src="https://via.placeholder.com/300/4E44CE/0A0F1F?text=NFT+2" class="w-full h-full object-cover" alt="NFT">
+                                </div>
+                            </div>
+                            <div class="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20 p-0.5">
+                                <div class="w-full h-full bg-gray-800 rounded-xl overflow-hidden">
+                                    <img src="https://via.placeholder.com/300/00FFC2/0A0F1F?text=NFT+3" class="w-full h-full object-cover" alt="NFT">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Transactions -->
+                    <div class="bg-darker rounded-xl p-6 border border-gray-800">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-medium">Recent Transactions</h3>
+                            <button class="text-sm text-gray-400 hover:text-gray-200">View All</button>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between border-b border-gray-800 pb-4">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+                                        <i class="fas fa-arrow-up text-sm"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p>Sent ETH</p>
+                                        <p class="text-sm text-gray-400">To: 0x4d3f...a8c2</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-red-400">-0.25 ETH</p>
+                                    <p class="text-sm text-gray-400">$608.83</p>
+                                    <p class="text-xs text-gray-500 mt-1">Confirmed</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between border-b border-gray-800 pb-4">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center">
+                                        <i class="fas fa-arrow-down text-sm"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p>Received BTC</p>
+                                        <p class="text-sm text-gray-400">From: 0x9a8b...f3e7</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-green-500">+0.035 BTC</p>
+                                    <p class="text-sm text-gray-400">$1,464.74</p>
+                                    <p class="text-xs text-gray-500 mt-1">Confirmed</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center">
+                                        <i class="fas fa-exchange-alt text-sm"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p>Swap MATIC</p>
+                                        <p class="text-sm text-gray-400">MATIC → ETH</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-primary">1,200 MATIC</p>
+                                    <p class="text-sm text-gray-400">0.42 ETH</p>
+                                    <p class="text-xs text-yellow-400 mt-1">Pending</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Send Modal -->
+    <div class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-darker rounded-xl border border-gray-800 w-full max-w-md">
+            <div class="p-6 border-b border-gray-800 flex justify-between items-center">
+                <h3 class="font-bold text-lg">Send Assets</h3>
+                <button class="text-gray-400 hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-6">
+                <div class="mb-4">
+                    <label class="block text-sm text-gray-400 mb-2">Recipient Address</label>
+                    <input type="text" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-primary" placeholder="0x...">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Asset</label>
+                        <div class="relative">
+                            <select class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 appearance-none focus:outline-none focus:border-primary">
+                                <option>ETH</option>
+                                <option>BTC</option>
+                                <option>MATIC</option>
+                                <option>USDC</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Amount</label>
+                        <input type="text" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-primary" placeholder="0.00">
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800 rounded-lg p-4 mb-6">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-sm text-gray-400">Network Fee</span>
+                        <span>0.0012 ETH</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-400">Estimated Time</span>
+                        <span>&lt; 1 min</span>
+                    </div>
+                </div>
+                
+                <button class="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition rounded-lg py-3 font-medium">
+                    Send Transaction
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Simple interactivity for the demo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Connect Wallet Button
+            const connectWalletBtn = document.querySelector('.bg-gradient-to-r');
+            connectWalletBtn.addEventListener('click', function() {
+                alert('Connect wallet flow would open here (MetaMask, WalletConnect, etc.)');
+            });
+            
+            // Toggle mobile menu
+            const mobileMenuBtn = document.querySelector('.md\\:hidden');
+            mobileMenuBtn.addEventListener('click', function() {
+                alert('Mobile menu would open here');
+            });
+        });
+    </script>
+</body>
+</html>

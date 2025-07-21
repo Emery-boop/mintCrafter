@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeFi Pulse Analytics | Real-time DeFi Insights</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #8b5cf6;
+            --dark: #0f172a;
+            --darker: #0a0f1f;
+            --light: #f1f5f9;
+            --gray: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --card-bg: rgba(15, 23, 42, 0.7);
+            --card-border: rgba(148, 163, 184, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 20%);
+            z-index: -1;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--card-border);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a.active {
+            color: var(--primary);
+        }
+
+        nav a.active::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .connect-wallet {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .connect-wallet:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+        }
+
+        /* Main Content */
+        .container {
+            padding: 2rem 5%;
+        }
+
+        .dashboard-header {
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-header p {
+            color: var(--gray);
+            max-width: 600px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-title {
+            color: var(--gray);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(37, 99, 235, 0.2);
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .change-up {
+            color: var(--success);
+        }
+
+        .change-down {
+            color: var(--danger);
+        }
+
+        /* Charts */
+        .chart-container {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .time-filter {
+            background: rgba(148, 163, 184, 0.1);
+            border: 1px solid var(--card-border);
+            color: var(--light);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .time-filter.active {
+            background: var(--primary);
+        }
+
+        .chart-wrapper {
+            height: 300px;
+            position: relative;
+        }
+
+        /* Protocols Section */
+        .protocols-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .view-all {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .protocols-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .protocol-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s;
+        }
+
+        .protocol-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .protocol-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .protocol-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .protocol-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .protocol-category {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .protocol-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .protocol-stat h4 {
+            color: var(--gray);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .protocol-stat p {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            padding: 3rem 5% 2rem;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .footer-column h3::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(148, 163, 184, 0.1);
+            color: var(--light);
+            transition: background 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--card-border);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 1rem;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .dashboard-header h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-chart-network"></i>
+            <h1>DeFi Pulse Analytics</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" class="active">Dashboard</a></li>
+                <li><a href="#">Protocols</a></li>
+                <li><a href="#">Chains</a></li>
+                <li><a href="#">Portfolio</a></li>
+                <li><a href="#">News</a></li>
+            </ul>
+        </nav>
+        <div class="header-actions">
+            <button class="connect-wallet">
+                <i class="fas fa-wallet"></i> Connect Wallet
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="dashboard-header">
+            <h2>DeFi Market Overview</h2>
+            <p>Real-time analytics and insights for decentralized finance protocols</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Total Value Locked (TVL)</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="tvl">$98.75B</div>
+                <div class="stat-change change-up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>2.4% (24h)</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">24h Volume</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="volume">$4.21B</div>
+                <div class="stat-change change-up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>5.7% (24h)</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Active Users</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="users">478.2K</div>
+                <div class="stat-change change-down">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>1.2% (24h)</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Dominant Chain</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                </div>
+                <div class="stat-value">Ethereum</div>
+                <div class="stat-change">
+                    <span>42.8% Market Share</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <div class="chart-title">TVL Historical Trend (30 Days)</div>
+                <div class="chart-actions">
+                    <button class="time-filter active">1M</button>
+                    <button class="time-filter">3M</button>
+                    <button class="time-filter">1Y</button>
+                    <button class="time-filter">All</button>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="tvlChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Protocols Section -->
+        <div class="protocols-section">
+            <div class="section-header">
+                <h3 class="section-title">Top Protocols</h3>
+                <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="protocols-grid">
+                <!-- Protocol Card 1 -->
+                <div class="protocol-card">
+                    <div class="protocol-header">
+                        <div class="protocol-icon">
+                            <i class="fab fa-ethereum"></i>
+                        </div>
+                        <div>
+                            <div class="protocol-name">Lido</div>
+                            <div class="protocol-category">Liquid Staking</div>
+                        </div>
+                    </div>
+                    <div class="protocol-stats">
+                        <div class="protocol-stat">
+                            <h4>TVL</h4>
+                            <p>$21.4B</p>
+                        </div>
+                        <div class="protocol-stat">
+                            <h4>Change (7d)</h4>
+                            <p class="change-up">+3.2%</p>
+                        </div>
+                        <div class="protocol-stat">
+                            <h4>Market Share</h4>
+                            <p>21.7%</p>
+                        </div>
+                        <div class="protocol-stat">
+                            <h4>Token</h4>
+                            <p>LDO</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Protocol Card 2 -->
+                <div class="protocol-card">
+                    <div class="protocol-header">
+                        <div class="protocol-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div>
+                            <div class="protocol-name">Aave</div>
+                            <div class="protocol-category">Lending</div>
+                        </div>
+                    </div>
+                    <div class="protocol-stats">
+                        <div class="protocol-stat">
+                            <h4>TVL</h4>
+                            <p>$12.8B</p>
+                        </div>
+                        <div class="protocol-stat">
+                            <h4>Change (7d)</h4>
+                            <p class="change-up">+1.8%</p>
+                        </div>
+                        <div class="protocol-stat">
+                            <h4>Market Share</h4>
+                            <p>13.0%</p>
+                        </div>
+                        <div class="protocol-stat">
+                            <h4>Token</h4>
+                            <p>AAVE</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Protocol Card 3 -->
+                <div class="protocol-card">
+                    <div class="protocol-header">
+                        <div class="protocol-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div>
+                            <div class="protocol-name">Uniswap</div>
+                            <div class="protocol-category">DEX</div>
+                        </div>
+                    </div>
+                    <div class="protocol-stats">
+                        <div class="protocol-stat">
+                            <h4>TVL</h4>
+                            <p>$7.2B</p>
+                        </div>
+                        <div class="protocol-stat">
+                            <h4>Change (7d)</h4>
+                            <p class="change-down">-0.5%</p>
+                        </div>
+                        <div class="protocol-stat">
+                            <h4>Market Share</h4>
+                            <p>7.3%</p>
+                        </div>
+                        <div class="protocol-stat">
+                            <h4>Token</h4>
+                            <p>UNI</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>DeFi Pulse Analytics</h3>
+                <p style="color: var(--gray); margin-bottom: 1rem; max-width: 300px;">
+                    Real-time analytics and insights for decentralized finance protocols across multiple blockchains.
+                </p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Products</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Protocol Analytics</a></li>
+                    <li><a href="#">Portfolio Tracker</a></li>
+                    <li><a href="#">API Access</a></li>
+                    <li><a href="#">Market Alerts</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Research Reports</a></li>
+                    <li><a href="#">DeFi Glossary</a></li>
+                    <li><a href="#">Market News</a></li>
+                    <li><a href="#">Learning Center</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Partnerships</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2023 DeFi Pulse Analytics. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Initialize TVL Chart
+        const ctx = document.getElementById('tvlChart').getContext('2d');
+        
+        // Generate data for the last 30 days
+        const labels = [];
+        const today = new Date();
+        for (let i = 30; i >= 0; i--) {
+            const date = new Date();
+            date.setDate(today.getDate() - i);
+            labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+        }
+        
+        // Generate data points with a trend
+        const data = [];
+        let currentValue = 90; // Starting value in billions
+        for (let i = 0; i <= 30; i++) {
+            // Add some random fluctuation
+            const fluctuation = (Math.random() - 0.5) * 2;
+            currentValue += fluctuation;
+            // Ensure value stays within a reasonable range
+            currentValue = Math.max(88, Math.min(100, currentValue));
+            data.push(currentValue);
+        }
+        
+        const tvlChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Value Locked (Billions)',
+                    data: data,
+                    borderColor: '#8b5cf6',
+                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                    borderWidth: 3,
+                    pointRadius: 0,
+                    pointHoverRadius: 6,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        titleColor: '#f1f5f9',
+                        bodyColor: '#f1f5f9',
+                        borderColor: 'rgba(148, 163, 184, 0.2)',
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return `TVL: $${context.parsed.y.toFixed(2)}B`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: '#94a3b8',
+                            maxRotation: 0,
+                            autoSkip: true,
+                            maxTicksLimit: 8
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(148, 163, 184, 0.1)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: '#94a3b8',
+                            callback: function(value) {
+                                return '$' + value + 'B';
+                            }
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    axis: 'x',
+                    intersect: false
+                }
+            }
+        });
+
+        // Simulate real-time data updates
+        function updateStats() {
+            // Update TVL
+            const tvlElement = document.getElementById('tvl');
+            const currentTvl = parseFloat(tvlElement.textContent.replace('$', '').replace('B', ''));
+            const tvlChange = (Math.random() - 0.4) * 0.5; // Random change between -0.2% and +0.8%
+            const newTvl = currentTvl * (1 + tvlChange / 100);
+            tvlElement.textContent = `$${newTvl.toFixed(2)}B`;
+            
+            // Update volume
+            const volumeElement = document.getElementById('volume');
+            const currentVolume = parseFloat(volumeElement.textContent.replace('$', '').replace('B', ''));
+            const volumeChange = (Math.random() - 0.3) * 1.0; // Random change between -0.3% and +0.7%
+            const newVolume = currentVolume * (1 + volumeChange / 100);
+            volumeElement.textContent = `$${newVolume.toFixed(2)}B`;
+            
+            // Update users
+            const usersElement = document.getElementById('users');
+            const currentUsers = parseFloat(usersElement.textContent.replace('K', ''));
+            const usersChange = (Math.random() - 0.5) * 0.8; // Random change between -0.4% and +0.4%
+            const newUsers = currentUsers * (1 + usersChange / 100);
+            usersElement.textContent = `${newUsers.toFixed(1)}K`;
+            
+            // Update chart with new data point
+            const chartData = tvlChart.data.datasets[0].data;
+            chartData.shift(); // Remove first data point
+            const lastValue = chartData[chartData.length - 1];
+            const newValue = lastValue * (1 + (Math.random() - 0.5) * 0.2 / 100); // Small random change
+            chartData.push(newValue);
+            
+            // Update labels
+            const chartLabels = tvlChart.data.labels;
+            chartLabels.shift(); // Remove first label
+            const newDate = new Date();
+            chartLabels.push(newDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+            
+            tvlChart.update();
+        }
+        
+        // Update stats every 5 seconds
+        setInterval(updateStats, 5000);
+        
+        // Time filter buttons
+        const timeFilters = document.querySelectorAll('.time-filter');
+        timeFilters.forEach(filter => {
+            filter.addEventListener('click', () => {
+                timeFilters.forEach(f => f.classList.remove('active'));
+                filter.classList.add('active');
+            });
+        });
+        
+        // Wallet connection
+        const connectBtn = document.querySelector('.connect-wallet');
+        connectBtn.addEventListener('click', () => {
+            connectBtn.innerHTML = '<i class="fas fa-check"></i> Wallet Connected';
+            connectBtn.style.background = 'linear-gradient(to right, #10b981, #06b6d4)';
+            setTimeout(() => {
+                connectBtn.innerHTML = '<i class="fas fa-wallet"></i> 0x3F5...c7B4';
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
