@@ -904,6 +904,23 @@
                 width: 90%;
                 padding: 20px;
             }
+            
+            /* Reduced size for header CTA button on mobile */
+            .header-container .cta-button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            /* Adjust pulse animation for smaller button */
+            .header-container .pulse {
+                animation: pulseSmall 2s infinite;
+            }
+            
+            @keyframes pulseSmall {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
         }
     </style>
 </head>
