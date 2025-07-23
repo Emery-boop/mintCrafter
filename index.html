@@ -148,6 +148,23 @@
             display: inline-block;
         }
 
+        /* NAVBAR BUTTON SPECIFIC STYLES */
+        .header-container .cta-button {
+            padding: 8px 20px;
+            font-size: 14px;
+        }
+        
+        .header-container .pulse {
+            animation: pulseSmall 2s infinite;
+        }
+        
+        @keyframes pulseSmall {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        /* END NAVBAR BUTTON STYLES */
+
         .cta-button:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 255, 157, 0.3);
@@ -905,21 +922,10 @@
                 padding: 20px;
             }
             
-            /* Reduced size for header CTA button on mobile */
+            /* NAVBAR BUTTON MOBILE ADJUSTMENT */
             .header-container .cta-button {
                 padding: 8px 16px;
                 font-size: 14px;
-            }
-            
-            /* Adjust pulse animation for smaller button */
-            .header-container .pulse {
-                animation: pulseSmall 2s infinite;
-            }
-            
-            @keyframes pulseSmall {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.05); }
-                100% { transform: scale(1); }
             }
         }
     </style>
@@ -1048,8 +1054,8 @@
                 <div class="portfolio-item">
                     <div class="portfolio-image" style="background: linear-gradient(45deg, #7b68ee, #00ff9d);"></div>
                     <div class="portfolio-overlay">
-                        <h3>Memecoin website </h3>
-                        <p>Memecoin website</p>
+                        <h3>Memecoin Website</h3>
+                        <p>High-impact design for a trending memecoin project</p>
                         <a href="nft.html" class="outline-button">View Project</a>
                     </div>
                 </div>
@@ -1154,69 +1160,65 @@
         </div>
     </section>
 
-    <!-- Contact Section with Formspree Integration -->
-    <!-- Updated Contact Section -->
-<section class="section" id="contact">
-    <div class="container">
-        <div class="section-header">
-            <h2>Get In Touch</h2>
-            <p>Have a project in mind? Let's discuss how we can help</p>
-        </div>
-        <div class="contact-container">
-            <div class="contact-form">
-                <!-- Updated Formspree action URL and field names -->
-                <form id="contactForm" action="https://formspree.io/f/mrbkykoy" method="POST">
-                    <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" id="name" name="name" class="form-control" required>
-                        <div class="error-message" id="nameError">Please enter your name</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" class="form-control" required>
-                        <div class="error-message" id="emailError">Please enter a valid email</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="project">Project Type</label>
-                        <select id="project" name="project" class="form-control" required>
-                            <option value="">Select Project Type</option>
-                            <option value="memecoin">Memecoin Website</option>
-                            <option value="nft">NFT Website</option>
-                            <option value="defi">DeFi Platform</option>
-                            <option value="dao">DAO Community Site</option>
-                            <option value="crypto">Crypto Service</option>
-                            <option value="other">Other</option>
-                        </select>
-                        <div class="error-message" id="projectError">Please select a project type</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="budget">Project Budget (USD)</label>
-                        <select id="budget" name="budget" class="form-control" required>
-                            <option value="">Select Budget Range</option>
-                            <option value="60-500">$60 - $500</option>
-                            <option value="500-1k">$500 - $1k</option>
-                            <option value="1k-5k">$1k - $5k</option>
-                            <option value="5k-10k">$5k - $10k</option>
-                            <option value="10k+">$10k+</option>
-                        </select>
-                        <div class="error-message" id="budgetError">Please select a budget range</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Project Details</label>
-                        <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
-                        <div class="error-message" id="messageError">Please enter project details</div>
-                    </div>
-                    
-                    <button type="submit" class="cta-button" id="submitButton" style="width: 100%;">
-                        <span id="buttonText">Send Message</span>
-                        <span class="spinner" id="submitSpinner"></span>
-                    </button>
-                </form>
+    <!-- Contact Section -->
+    <section class="section" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Get In Touch</h2>
+                <p>Have a project in mind? Let's discuss how we can help</p>
             </div>
-      
+            <div class="contact-container">
+                <div class="contact-form">
+                    <form id="contactForm" action="https://formspree.io/f/mrbkykoy" method="POST">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                            <div class="error-message" id="nameError">Please enter your name</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                            <div class="error-message" id="emailError">Please enter a valid email</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="project">Project Type</label>
+                            <select id="project" name="project" class="form-control" required>
+                                <option value="">Select Project Type</option>
+                                <option value="memecoin">Memecoin Website</option>
+                                <option value="nft">NFT Website</option>
+                                <option value="defi">DeFi Platform</option>
+                                <option value="dao">DAO Community Site</option>
+                                <option value="crypto">Crypto Service</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="error-message" id="projectError">Please select a project type</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="budget">Project Budget (USD)</label>
+                            <select id="budget" name="budget" class="form-control" required>
+                                <option value="">Select Budget Range</option>
+                                <option value="60-500">$60 - $500</option>
+                                <option value="500-1k">$500 - $1k</option>
+                                <option value="1k-5k">$1k - $5k</option>
+                                <option value="5k-10k">$5k - $10k</option>
+                                <option value="10k+">$10k+</option>
+                            </select>
+                            <div class="error-message" id="budgetError">Please select a budget range</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Project Details</label>
+                            <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
+                            <div class="error-message" id="messageError">Please enter project details</div>
+                        </div>
+                        
+                        <button type="submit" class="cta-button" id="submitButton" style="width: 100%;">
+                            <span id="buttonText">Send Message</span>
+                            <span class="spinner" id="submitSpinner"></span>
+                        </button>
+                    </form>
+                </div>
                 <div class="contact-info">
                     <h3>Contact Information</h3>
-                    
                     <div class="info-item">
                         <div class="info-icon">
                             <i class="fas fa-envelope"></i>
@@ -1226,7 +1228,6 @@
                             <p>mintcrafter1@gmail.com</p>
                         </div>
                     </div>
-                   
                     <div class="social-links">
                         <a href="https://x.com/CrafterMint?t=17oGB8FuKzCeJFgPe5yvCw&s=09" class="social-link"><i class="fab fa-twitter"></i></a>
                         <a href="http://t.me/Mintc_rafter" class="social-link"><i class="fab fa-telegram"></i></a>
@@ -1248,9 +1249,7 @@
                     <p>We craft high-converting Web3 experiences pixel by pixel for blockchain startups and NFT projects.</p>
                     <div class="social-links">
                         <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                       
                         <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
-                       
                     </div>
                 </div>
                 <div class="footer-col">
